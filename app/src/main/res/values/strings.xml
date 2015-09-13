@@ -9,4 +9,14 @@
     <string name="current_task_tab">Current</string>
     <string name="done_task_tab">Done</string>
 
+    <string name="dialog_task_title">Adding task</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <string name="dialog_error_empty_title">Please, enter the title</string>
+
+    <string name="hint_task_title">Title</string>
+    <string name="hint_task_date">Date</string>
+    <string name="hint_task_time">Time</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package ru.scrsa.reminder;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -9,11 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import ru.scrsa.reminder.adapter.TabAdapter;
+import ru.scrsa.reminder.dialog.AddingTaskDialogFragment;
 import ru.scrsa.reminder.fragment.SplashFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener {
 
     FragmentManager fragmentManager;
     PreferenceHelper preferenceHelper;
@@ -85,5 +89,20 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void fabOnClick(View v) {
+        DialogFragment addingTaskDialogFragment = new AddingTaskDialogFragment();
+        addingTaskDialogFragment.show(getFragmentManager(), "AddingTaskDialogFragment");
+    }
+
+    @Override
+    public void onTaskAdded() {
+        Toast.makeText(this, "Task added", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTaskAddingCanceled() {
+        Toast.makeText(this, "Task added canceled", Toast.LENGTH_SHORT).show();
     }
 }
