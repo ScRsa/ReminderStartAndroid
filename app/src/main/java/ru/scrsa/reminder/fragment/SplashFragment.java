@@ -1,14 +1,16 @@
-package ru.scrsa.reminder;
+package ru.scrsa.reminder.fragment;
 
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.concurrent.TimeUnit;
+
+import ru.scrsa.reminder.R;
 
 
 /**
@@ -43,7 +45,9 @@ public class SplashFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            getActivity().getFragmentManager().popBackStack();
+            if (getActivity() != null) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
 
             return null;
         }

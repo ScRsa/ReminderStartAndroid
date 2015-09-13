@@ -1,10 +1,17 @@
 package ru.scrsa.reminder;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import ru.scrsa.reminder.adapter.TabAdapter;
+import ru.scrsa.reminder.fragment.SplashFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
         PreferenceHelper.getInstance().init(getApplicationContext());
         preferenceHelper = PreferenceHelper.getInstance();
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         runSplash();
+
+        prepareUI();
     }
 
     @Override
@@ -56,9 +65,25 @@ public class MainActivity extends AppCompatActivity {
         if (!preferenceHelper.getBoolean(PreferenceHelper.SPLASH_IS_INVISIBLE)) {
             SplashFragment splashFragment = new SplashFragment();
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, splashFragment)
+                    .replace(R.id.content_frame, splashFragment)
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    public void prepareUI() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+            setSupportActionBar(toolbar);
+        }
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        TabAdapter tabAdapter = new TabAdapter(fragmentManager, this);
+        viewPager.setAdapter(tabAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }
