@@ -14,8 +14,17 @@ public class TabAdapter extends FragmentPagerAdapter {
 
     private String[] tabs;
 
+    public static final int CURRENT_TASK_FRAGMENT_POSITION = 0;
+    public static final int DONE_TASK_FRAGMENT_POSITION = 1;
+
+    private CurrentTaskFragment currentTaskFragment;
+    private DoneTaskFragment doneTaskFragment;
+
     public TabAdapter(FragmentManager fm, Context context) {
         super(fm);
+
+        currentTaskFragment = new CurrentTaskFragment();
+        doneTaskFragment = new DoneTaskFragment();
 
         tabs = new String[] {
                 context.getString(R.string.current_task_tab),
@@ -32,9 +41,9 @@ public class TabAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new CurrentTaskFragment();
+                return currentTaskFragment;
             case 1:
-                return new DoneTaskFragment();
+                return doneTaskFragment;
             default:
                 return null;
         }
