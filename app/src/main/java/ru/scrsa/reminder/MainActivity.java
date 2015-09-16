@@ -18,16 +18,18 @@ import ru.scrsa.reminder.dialog.AddingTaskDialogFragment;
 import ru.scrsa.reminder.fragment.CurrentTaskFragment;
 import ru.scrsa.reminder.fragment.DoneTaskFragment;
 import ru.scrsa.reminder.fragment.SplashFragment;
+import ru.scrsa.reminder.fragment.TaskFragment;
 import ru.scrsa.reminder.model.ModelTask;
 
-public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener {
+public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener,
+        CurrentTaskFragment.OnTaskDoneListener, DoneTaskFragment.OnTaskRestoreListener {
 
     FragmentManager fragmentManager;
     PreferenceHelper preferenceHelper;
     TabAdapter tabAdapter;
 
-    CurrentTaskFragment currentTaskFragment;
-    DoneTaskFragment doneTaskFragment;
+    TaskFragment currentTaskFragment;
+    TaskFragment doneTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,5 +116,15 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskAddingCanceled() {
         Toast.makeText(this, "Task added canceled", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTaskDone(ModelTask task) {
+        doneTaskFragment.addTask(task);
+    }
+
+    @Override
+    public void onTaskRestore(ModelTask task) {
+        currentTaskFragment.addTask(task);
     }
 }

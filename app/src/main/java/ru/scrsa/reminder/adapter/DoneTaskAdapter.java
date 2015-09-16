@@ -13,32 +13,27 @@ import android.widget.TextView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.scrsa.reminder.R;
 import ru.scrsa.reminder.Utils;
-import ru.scrsa.reminder.fragment.CurrentTaskFragment;
+import ru.scrsa.reminder.fragment.DoneTaskFragment;
 import ru.scrsa.reminder.model.Item;
 import ru.scrsa.reminder.model.ModelTask;
 
-public class CurrentTaskAdapter extends TaskAdapter {
 
-    public CurrentTaskAdapter(CurrentTaskFragment taskFragment) {
+public class DoneTaskAdapter extends TaskAdapter {
+
+    public DoneTaskAdapter(DoneTaskFragment taskFragment) {
         super(taskFragment);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        switch (viewType) {
-            case TYPE_TASK:
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.model_task, viewGroup, false);
-                TextView title = (TextView) view.findViewById(R.id.tvTaskTitle);
-                TextView date = (TextView) view.findViewById(R.id.tvTaskDate);
-                CircleImageView priority = (CircleImageView) view.findViewById(R.id.cvTaskPriority);
 
-                return new TaskViewHolder(view, title, date, priority);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.model_task, viewGroup, false);
+        TextView title = (TextView) view.findViewById(R.id.tvTaskTitle);
+        TextView date = (TextView) view.findViewById(R.id.tvTaskDate);
+        CircleImageView priority = (CircleImageView) view.findViewById(R.id.cvTaskPriority);
 
-            case TYPE_SEPARATOR:
-                return null;
-            default:
-                return null;
-        }
+        return new TaskViewHolder(view, title, date, priority);
+
     }
 
     @Override
@@ -61,25 +56,26 @@ public class CurrentTaskAdapter extends TaskAdapter {
             }
 
             itemView.setVisibility(View.VISIBLE);
-            itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
+            itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
 
-            taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text));
-            taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text));
+            taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));
+            taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
             taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
-            taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_blank_circle_outline);
+            taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_marked_circle_outline);
 
             taskViewHolder.priority.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    task.setStatus(ModelTask.STATUS_DONE);
+                    task.setStatus(ModelTask.STATUS_CURRENT);
 
-                    itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
+                    itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
 
-                    taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));
-                    taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
+                    taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text));
+                    taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text));
                     taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
 
-                    ObjectAnimator flipIn = ObjectAnimator.ofFloat(taskViewHolder.priority, "rotationY", -180f, 0f);
+                    ObjectAnimator flipIn = ObjectAnimator.ofFloat(taskViewHolder.priority, "rotationY", 180f, 0f);
+                    taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_blank_circle_outline);
 
                     flipIn.addListener(new Animator.AnimatorListener() {
                         @Override
@@ -89,11 +85,10 @@ public class CurrentTaskAdapter extends TaskAdapter {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            if (task.getStatus() == ModelTask.STATUS_DONE) {
-                                taskViewHolder.priority.setImageResource(R.drawable.ic_checkbox_marked_circle_outline);
+                            if (task.getStatus() != ModelTask.STATUS_DONE) {
 
-                                ObjectAnimator translationX = ObjectAnimator.ofFloat(itemView, "translationX", 0f, itemView.getWidth());
-                                ObjectAnimator translationXBack = ObjectAnimator.ofFloat(itemView, "translationX", itemView.getWidth(), 0f);
+                                ObjectAnimator translationX = ObjectAnimator.ofFloat(itemView, "translationX", 0f, -itemView.getWidth());
+                                ObjectAnimator translationXBack = ObjectAnimator.ofFloat(itemView, "translationX", -itemView.getWidth(), 0f);
 
                                 translationX.addListener(new Animator.AnimatorListener() {
                                     @Override
@@ -141,5 +136,4 @@ public class CurrentTaskAdapter extends TaskAdapter {
             });
         }
     }
-
 }

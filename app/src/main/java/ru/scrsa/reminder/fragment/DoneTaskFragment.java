@@ -1,8 +1,8 @@
 package ru.scrsa.reminder.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,32 +10,54 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.scrsa.reminder.R;
+import ru.scrsa.reminder.adapter.DoneTaskAdapter;
+import ru.scrsa.reminder.model.ModelTask;
 
 
-public class DoneTaskFragment extends Fragment {
-
-    private RecyclerView rvCurrentTask;
-    private RecyclerView.LayoutManager layoutManager;
-
+public class DoneTaskFragment extends TaskFragment {
 
     public DoneTaskFragment() {
         // Required empty public constructor
     }
 
+    OnTaskRestoreListener onTaskRestoreListener;
+
+    public interface OnTaskRestoreListener {
+        void onTaskRestore(ModelTask task);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            onTaskRestoreListener = (OnTaskRestoreListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnTaskRestoreListener");
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_current_task, container, false);
 
-        rvCurrentTask = (RecyclerView) view.findViewById(R.id.rvCurrentTask);
+        View view = inflater.inflate(R.layout.fragment_done_task, container, false);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvDoneTask);
 
         layoutManager = new LinearLayoutManager(getActivity());
 
-        rvCurrentTask.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new DoneTaskAdapter(this);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
 
 
+    @Override
+    public void moveTask(ModelTask task) {
+        onTaskRestoreListener.onTaskRestore(task);
+    }
 }

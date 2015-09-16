@@ -1,8 +1,8 @@
 package ru.scrsa.reminder.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,18 +14,28 @@ import ru.scrsa.reminder.adapter.CurrentTaskAdapter;
 import ru.scrsa.reminder.model.ModelTask;
 
 
-public class CurrentTaskFragment extends Fragment {
-
-    private RecyclerView rvCurrentTask;
-    private RecyclerView.LayoutManager layoutManager;
-
-    private CurrentTaskAdapter adapter;
-
+public class CurrentTaskFragment extends TaskFragment {
 
     public CurrentTaskFragment() {
         // Required empty public constructor
     }
 
+    OnTaskDoneListener onTaskDoneListener;
+
+    public interface OnTaskDoneListener {
+        void onTaskDone(ModelTask task);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            onTaskDoneListener = (OnTaskDoneListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnTaskDoneListener");
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,38 +43,21 @@ public class CurrentTaskFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_current_task, container, false);
 
-        rvCurrentTask = (RecyclerView) view.findViewById(R.id.rvCurrentTask);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvCurrentTask);
 
         layoutManager = new LinearLayoutManager(getActivity());
 
-        rvCurrentTask.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CurrentTaskAdapter();
-        rvCurrentTask.setAdapter(adapter);
+        adapter = new CurrentTaskAdapter(this);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-    public void addTask(ModelTask newTask) {
-        int position = -1;
 
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            if (adapter.getItem(i).isTask()) {
-                ModelTask task = (ModelTask) adapter.getItem(i);
-                if (newTask.getDate() < task.getDate()) {
-                    position = i;
-                    break;
-                }
-            }
-        }
-
-        if (position != -1) {
-            adapter.addItem(position, newTask);
-        } else {
-            adapter.addItem(newTask);
-        }
-
+    @Override
+    public void moveTask(ModelTask task) {
+        onTaskDoneListener.onTaskDone(task);
     }
-
-
 }
