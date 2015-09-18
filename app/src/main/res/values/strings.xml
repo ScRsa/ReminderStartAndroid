@@ -19,4 +19,7 @@
     <string name="hint_task_date">Date</string>
     <string name="hint_task_time">Time</string>
 
+    <string name="dialog_removing_message">Delete this task?</string>
+    <string name="removed">Removed</string>
+
 </resources>
