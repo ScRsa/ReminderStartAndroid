@@ -11,6 +11,7 @@ import android.view.View;
 import ru.scrsa.reminder.MainActivity;
 import ru.scrsa.reminder.R;
 import ru.scrsa.reminder.adapter.TaskAdapter;
+import ru.scrsa.reminder.alarm.AlarmHelper;
 import ru.scrsa.reminder.model.Item;
 import ru.scrsa.reminder.model.ModelTask;
 
@@ -23,6 +24,8 @@ public abstract class TaskFragment extends Fragment {
 
     public MainActivity activity;
 
+    public AlarmHelper alarmHelper;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -30,6 +33,8 @@ public abstract class TaskFragment extends Fragment {
         if (getActivity() != null) {
             activity = (MainActivity) getActivity();
         }
+
+        alarmHelper = AlarmHelper.getInstance();
 
         loadTaskFromDb();
     }
@@ -98,6 +103,7 @@ public abstract class TaskFragment extends Fragment {
                         @Override
                         public void onViewDetachedFromWindow(View v) {
                             if (isRemoved[0]) {
+                                alarmHelper.removeAlarm(timestamp);
                                 activity.dbHelper.removeTask(timestamp);
                             }
                         }

@@ -23,6 +23,7 @@ import java.util.Calendar;
 
 import ru.scrsa.reminder.R;
 import ru.scrsa.reminder.Utils;
+import ru.scrsa.reminder.alarm.AlarmHelper;
 import ru.scrsa.reminder.model.ModelTask;
 
 public class AddingTaskDialogFragment extends DialogFragment {
@@ -152,10 +153,13 @@ public class AddingTaskDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 task.setTitle(etTitle.getText().toString());
+                task.setStatus(ModelTask.STATUS_CURRENT);
                 if (etDate.length() != 0 || etTime.length() != 0) {
                     task.setDate(calendar.getTimeInMillis());
+
+                    AlarmHelper alarmHelper = AlarmHelper.getInstance();
+                    alarmHelper.setAlarm(task);
                 }
-                task.setStatus(ModelTask.STATUS_CURRENT);
                 addingTaskListener.onTaskAdded(task);
                 dialog.dismiss();
             }

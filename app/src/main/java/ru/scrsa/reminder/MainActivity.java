@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import ru.scrsa.reminder.adapter.TabAdapter;
+import ru.scrsa.reminder.alarm.AlarmHelper;
 import ru.scrsa.reminder.database.DBHelper;
 import ru.scrsa.reminder.dialog.AddingTaskDialogFragment;
 import ru.scrsa.reminder.fragment.CurrentTaskFragment;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         PreferenceHelper.getInstance().init(getApplicationContext());
         preferenceHelper = PreferenceHelper.getInstance();
 
+        AlarmHelper.getInstance().init(getApplicationContext());
+
         dbHelper = new DBHelper(getApplicationContext());
 
         fragmentManager = getSupportFragmentManager();
@@ -52,6 +55,18 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         runSplash();
 
         prepareUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
     }
 
     @Override
