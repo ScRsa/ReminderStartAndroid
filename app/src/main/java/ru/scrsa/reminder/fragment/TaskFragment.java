@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.SeekBar;
 
 import ru.scrsa.reminder.MainActivity;
 import ru.scrsa.reminder.R;
@@ -124,4 +123,6 @@ public abstract class TaskFragment extends Fragment {
     public abstract void loadTaskFromDb();
 
     public abstract void moveTask(ModelTask task);
+
+    public abstract void findTasks(String title);
 }
